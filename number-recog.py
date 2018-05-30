@@ -5,6 +5,7 @@ from keras.layers import Convolution2D , MaxPooling2D
 from keras.utils import np_utils
 from keras.datasets import mnist
 from matplotlib import pyplot as plt
+from keras.models import model_from_json
 
 np.random.seed(123)
 (x_train,y_train),(x_test,y_test) = mnist.load_data()
@@ -36,6 +37,11 @@ model.add(Dense(128,activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(10,activation='softmax'))
 model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-model.fit(x_train,y_train,batch_size=32,nb_epoch=10,verbose=1)
+model.fit(x_train,y_train,batch_size=32,epochs=4,verbose=1)
+model_json = model.to_json()
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
+model.save_weights("model.h5")
+print("Saved model to disk")
 score = model.evaluate(x_test,y_test,verbose=0)
 print('score: ',score)
